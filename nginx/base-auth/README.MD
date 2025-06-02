@@ -59,21 +59,25 @@ server {
 
 ### ✅ Что необходимо сделать для работы:
 
-1. Создайте файл `.htpasswd` с помощью команды:
+1. Установите утилиту `apache2-utils` командой:
    ```bash
-   htpasswd -c /etc/nginx/.htpasswd username
+   sudo apt-get install apache2-utils
+   ```
+2. Создайте файл `.htpasswd` с помощью команды:
+   ```bash
+   sudo htpasswd -c /etc/nginx/.htpasswd username
    ```
    В процессе создания файла вам будет предложено ввести и подтвердить пароль для пользователя `username`. Для добавления других пользователей, используйте команду без флага `-c`:
    ```bash
    htpasswd /etc/nginx/.htpasswd anotheruser
    ```
 
-2. Убедитесь, что Nginx может читать файл `.htpasswd`, для этого файл должен иметь права доступа, например:
+3. Убедитесь, что Nginx может читать файл `.htpasswd`, для этого файл должен иметь права доступа, например:
    ```bash
    chmod 644 /etc/nginx/.htpasswd
    ```
 
-3. Перезагрузите Nginx, чтобы изменения вступили в силу:
+4. Перезагрузите Nginx, чтобы изменения вступили в силу:
    ```bash
    sudo systemctl reload nginx
    ```
