@@ -1,4 +1,4 @@
-Версия: 1.0
+Версия: 1.1 от 10.07.25
 
 # Инструкция по настройке редиректов без конечного слеша в Nginx
 
@@ -31,27 +31,10 @@ include /etc/nginx/conf.d/*.conf;
 
 Содержит 4 карты:
 
-```nginx
-map $request_uri $needs_slash_redirect {
-    default 0;
-    ~^(.+[^/])$ 1; # если путь не заканчивается на /
-}
-
-map $request_uri $is_static_file {
-    default 0;
-    ~*\.((js|css|svg|webmanifest|png|jpe?g|gif|ico|woff2?|ttf|eot|otf|mp4|webp|json|xml|txt|html?))$ 1;
-}
-
-map $args $has_query_string {
-    ""      0;
-    default 1;
-}
-
-map "$needs_slash_redirect:$is_static_file:$has_query_string" $do_without_slash_redirect {
-    default 0;
-    "1:0:0" 1;
-}
-```
+- Проверка, заканчивается ли путь на слэш
+- Отключение редиректа со статичных файлов (js, css, изображения, шрифты, документы и т.п.)
+- Отключение редиректа, если в запросе есть GET-параметры
+- Объединение условий в итоговую переменную `$do_without_slash_redirect`, по которой и принимается решение
 
 📌 **Назначение**:
 - Сначала проверяется, что URL не заканчивается на `/`
@@ -93,7 +76,6 @@ server {
 
     root /var/www/project/public;
 
-    include snippets/redirect-map-without-slash.conf;
     include snippets/rewrite-without-slash.conf;
 
     location / {
